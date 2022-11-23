@@ -86,19 +86,23 @@ get_year_jail_pop <- function() {
   )
 }
 
+#Call data
 get_year_jail_pop()
 
+#Create bar graph
+plot_jail_pop_for_us <- ggplot(data = get_year_jail_pop() ) +
+  geom_col(
+    mapping = aes(x= year, y = total_jail_pop),
+    color = "gray",
+    alpha = .5
+  )
 
-plot_jail_pop_for_us <- ggplot(data = college_table ) +
-  geom_point(
-    mapping = aes(x = State.abbreviation , y =average_expense_out_state),
-    color = "blue",
-    alpha = .3
-  ) + coord_flip()
 
-print(chart_1 + labs(
-  title = "Chart #1 Average expense (out of state) of each state",
-  y = "Price", x = "States"
+
+print(plot_jail_pop_for_us + labs(
+  title = "Increase of Jail Population in the U.S. (1970-2018)", 
+  caption = "The year-over-year data detailing the jail population of the US from 1970 to 2018",
+  y = "Total Jail Population", x = "Year"
 ))
 #----------------------------------------------------------------------------#
 # This function ... <todo:  update comment>
@@ -116,22 +120,152 @@ plot_jail_pop_for_us <- function()  {
 ## Section 4  ---- 
 #----------------------------------------------------------------------------#
 # Growth of Prison Population by State 
-# Your functions might go here ... <todo:  update comment>
-# See Canvas
-#----------------------------------------------------------------------------#
+
+#Aggregate from original data set
+incarceration_inequality_aggregated_state <- incarceration_inequality %>%
+  group_by(year) %>%
+  select(
+    total_jail_pop,
+    state,
+    year
+  )
+#For removing data with no values
+incarceration_inequality_states_no_NA <- incarceration_inequality_aggregated_state[complete.cases(incarceration_inequality_aggregated_state), ]
+
+#Grouping data by state
+incarceration_inequality_state_summary <- incarceration_inequality_states_no_NA %>%
+  group_by(state, year) %>%
+  summarise(across(c(total_jail_pop), sum))
+
+
+
+#Function for Specific State
+get_jail_population_by_state <- function(state_abb){
+  incarceration_inequality_state_summary <- incarceration_inequality_state_summary[incarceration_inequality_state_summary$state == state_abb, ]
+  print(incarceration_inequality_state_summary)
+}
+
+#test
+get_jail_population_by_state("AL")
+#Test 2
+incarceration_inequality_state_summary <- incarceration_inequality_state_summary[incarceration_inequality_state_summary$state == "AK", ]
+
+#Create Graph By State
+plot_jail_pop_by_states <- function(){
+  specific_state_plot <- ggplot(data = incarceration_inequality_state_summary() ) +
+    geom_col(
+      mapping = aes(x= year, y = total_jail_pop),
+      color = "gray",
+      alpha = .5
+    )
+  
+  print(specific_state_plot + labs(
+    title = "Increase of Jail Population in U.S State (1970-2018)", 
+    caption = "The year-over-year data detailing the jail population of US States from 1970 to 2018",
+    y = "Total Jail Population", x = "Year"
+  ))
+  
+}
+
+
+state_summary_graph <- ggplot(data = incarceration_inequality_state_summary() ) +
+  geom_col(
+    mapping = aes(x= year, y = total_jail_pop),
+    color = "gray",
+    alpha = .5
+  )
+
+print(incarceration_inequality_state_summary + labs(
+  title = "Increase of Jail Population in a U.S State (1970-2018)", 
+  caption = "The year-over-year data detailing the jail population of US States from 1970 to 2018",
+  y = "Total Jail Population", x = "Year"
+))
+  #----------------------------------------------------------------------------#
 
 ## Section 5  ---- 
 #----------------------------------------------------------------------------#
-# <variable comparison that reveals potential patterns of inequality>
-# Your functions might go here ... <todo:  update comment>
-# See Canvas
+#dataset determining
+incarceration_inequality_aggregated_2 <- incarceration_inequality %>%
+  group_by(year) %>%
+  select(
+    total_pop,
+    female_pop_15to64,
+    male_pop_15to64,
+    female_adult_jail_pop,
+    male_adult_jail_pop,
+    total_jail_pop
+  )
+
+#remove NA data
+incarceration_inequaity_no_NA_2 <- incarceration_inequality_aggregated_2[complete.cases(incarceration_inequality_aggregated_2), ]
+
+get_year_jail_pop2 <- function() {
+  incarceration_inequaity_no_NA_2 %>%
+    group_by(year) %>%
+    select(
+      year,
+      total_jail_pop, 
+      male_adult_jail_pop,
+    )
+}
+
+#call function
+get_year_jail_pop2()
+
+#create graph
+plot_jail_pop_2 <- ggplot(data = get_year_jail_pop2() ) +
+  geom_col(
+    mapping = aes(x= year, y = total_jail_pop),
+    color = "gray",
+    alpha = .5
+  )
+
+
+
+print(plot_jail_pop_2 + labs(
+  title = "Male Prisoner Gender Ratio (1970-2018)", 
+  caption = "The year-over-year data detailing the jail population gender ratio of the US from 1970 to 2018",
+  y = "Total Male Jail Population", x = "Year"
+))
+
 #----------------------------------------------------------------------------#
 
 ## Section 6  ---- 
 #----------------------------------------------------------------------------#
-# <a map shows potential patterns of inequality that vary geographically>
-# Your functions might go here ... <todo:  update comment>
-# See Canvas
+install.packages("usmap")
+library("usmap")
+
+#data aggregation
+aggregated_state <- incarceration_inequality %>%
+  group_by(year) %>%
+  select(
+    total_jail_pop,
+    state,
+    year
+  )
+
+#remove NA values
+aggregated_states_no_NA <- aggregated_state[complete.cases(aggregated_state), ]
+
+#Combine by state
+total_state_jail_pop <- aggregated_states_no_NA %>%
+  group_by(state, year) %>%
+  summarise(across(c(total_jail_pop), sum))
+
+#find states with less than 3000 prisoners in the past 48 years
+states_with_less_than_3000_prisoners <- total_state_jail_pop[total_state_jail_pop$total_jail_pop < 3000 , ]
+
+#find unique states with less than 3000 prisoners in the past 48 years
+unique_states_with_less_than_3000_prisoners <- unique(states_with_less_than_3000_prisoners$state)
+
+#plot of states with less than 3000 prisoners in the past 48 years
+us_map_data <- plot_usmap(include = c(unique_states_with_less_than_3000_prisoners)) + 
+  labs(title = "States that Never Exceeded 3000 Prisoners from 1970 to 2018") +
+  labs(caption = "States that never held more than 3000 prisoners from the years 1970 to 2018")
+
+
+print(us_map_data)
+
 #----------------------------------------------------------------------------#
 
 ## Load data frame ---- 

@@ -1,7 +1,7 @@
 ---
-title: "Your A4 Report Title (TODO: Revise title)"
-author: "Your Name"
-date: '2022-11-01'
+title: "Prisoners in the US"
+author: "Jett Chang-Lam"
+date: '2022-11-22'
 output: html_document
 ---
 
@@ -11,35 +11,33 @@ source("../source/analysis.R")
 ```
 
 ## Abstract 
-[TODO: Include a short abstract (about 50 words)]
+The United States holds many, many prisoners, of many different demographics and groups. Here, I seeks to examine some particulars behind what groups of people are behind bars, and in what numbers. As the US has had a long standing relationship with such unsightly things such as racism and sexism in the path, I am in particular looking for data that may establish a link between the prisoners in the United States and potential injustice that may be taking place.
 
-# Test (TODO: Remove before submission!!)
-```{r echo=FALSE}
-q1_string <- test_query1()
-num <- 5
-```
-As you know, this is a markdown report. The [R Markdown Cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf) is **useful!**
-
-* Here's a test of a dynamic variable. Say **"`r q1_string`!!!** 
-* Here's another test. A vector
-of numbers: `r test_query2(num)`.
-
-Recall that _{r echo=TRUE}_ can be used to display the code, 
-which is very useful when developing and debugging a report. Here's an example: 
-
-```{r echo=TRUE}
-num <- 5
-sum <- sum(test_query2(num))
-print(sum)
-```
 
 ## Introduction 
-[TODO]
+Prisons in the United States have long been a place where injustice and inequality has been allowed to stand. Racism, sexism, homophobia, and many other difference style of prejudice have existed in the United States and have influence our system of law. In this report, I examine a data set from the Vera Institute to take a closer look behind some specific types of discrimination. This report looks at data that should matter to anyone living in, or planning to visit the United States. Many, many people are at risk of people unfairly sentenced purely due do prejudice and discrimination. In essence, being in contact with the United States as a legal entity means that we are all stakeholders within this extensive data set. In particular, in this report I examine the changing gender demographics of the US prison population from 1970 to 2018, as well as examining which states imprison less people relative to the rest of the union.
+
 
 ## Data Summary 
-[TODO]
+When we examine the specifics of who is imprisoned in the United States, we quickly notice that while it may not be primarily men, men take up more than a sizable chunk of the prisoner population. In the most recent year of 2018, the ratio between male and female prisoners was `r summary_info$male_to_female_ratio_2018` to one. While this is significant, if we look back 52 years ago to 1970, that same ratio was instead `r summary_info$male_to_female_ratio_1970`. This calls into play an interesting question. A change in ratio of `r summary_info$male_to_female_ratio_48_year_change` over the course of 48 years is more than significant, so what is the driving cause behind this? Perhaps women are committing more crimes now in the present day verses the long past time of the 70s. Or perhaps the opposite is true and men are simply committing less crimes now than they did in the past. A third possibility could be that men were much more likely to be prosecuted for the same crime than women were in the past, and that social factor has been changing the the 48 years after 1970. Of course, many factors are most likely in play with this piece of data in particular, but it is more likely than not that inequality be it in the legal or social realm is at play contributing to this piece of data.
 
-[TODO ... other sections ... See Canvas for details]
+## Growth of the US Prison Population
+In this chart, I examine the changing nature of the prison population of the United States. There has been an increase of nearly a factor of four from the year 1970 to 2018. This answers a clear question of the trend that the US is moving towards in regards to prisoner population, but also begs to the question of "What specific actions cause the fluctuations in this graph?" In particular the area around 2010 is strange, because of course the population of the US is increasing, which may lend itself to more prisoners, at around 2010, the population immediately stagnates, most likely due to a change in law enforcement policy.
+
+##Growth of Prison Population by State 
+Here, I created a chart detailing the growth of the prison population in one state in particular, Alaska. As a more remote, less populated state, there are less prisoners here, but this chart still contains some interesting data that may have larger implications. Curiously, Alaska floats at around 30 prisoners for many, many years, before a strange event in 1999, which leads to the prison population more than doubling to 67 prisoners. However, as this growth is not continued in the following years, it is likely to have not come from a strong change in policing, sentencing, or a shift in public policy, but either a distinct wave of crime, or one event that place around 30 people behind bars. However, we must ask ourselves, "what was that event?" because without knowing what specifically sentenced that many people to prison, the possibility of a change in public policy or other such systematic changes remains open.
+
+## Variable Comparison that Reveals Potential Patterns of Inequality
+Here, I take a closer look at what was discussed before, the changing nature of the gender ratio within US prisons. As before, we can note the significantly higher rate of incarcerated men in the US when compared to the rate of incarcerated women. We can also see how the ratio has evened, but the gap between men and women remains sizable. However, through this graph, we can discern some new information. If we ask ourselves, "at what year was the catalytic event that led to the thinning of the prison gender ratio?", we can see using this graph that around the year 1980, the gender ratio begins to rapidly thin when compared to the 70s. As a whole, one could conclude from this graph, that while we may not know of a particular cause, women were generally a minute portion of the prison population prior to the year 1980, in which an event happened that cause a higher proportion of women to be sentenced to prison than the past, in a trend that has continued at least up to the year 2018.
+
+##A Map Shows Potential Patterns of Inequality that Vary Geographically
+This map examines which states have *never* exceeded a total prisoner count of 3000 inmates from the year 1970 up until 2018. This is interesting because these states vary in many different ways, culture, geography, size, population, economy. But they are all united in one thing. In almost the past half century, they have never locked up more than 3000 people at one time. While yes, a large portion of this can be accounted for the smaller population of some of these states such as Wyoming, that does not explain why states such as Tennessee have imprisoned more than 3000 people, which a state such as North Carolina, which boasts nearly double the population of Tennessee, has not. This asks the very significant question of "what unites these states that are shown?" Many factors may be at play, but whether it is due to incompetence of sentencing, or success of crime deterrence, these shown states are doing something that the others can't.
+
+
+
+```{r, echo=FALSE}
+source("../source/analysis.R")
+```
 
 _All the very best with your work!_
 
