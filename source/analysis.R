@@ -20,7 +20,46 @@ test_query2 <- function(num=6) {
 
 ## Section 2  ---- 
 #----------------------------------------------------------------------------#
-# Your functions and variables might go here ... <todo: update comment>
+
+# Following is my date set named 'incarceration_inequality'
+incarceration_inequality <- read.csv("https://raw.githubusercontent.com/vera-institute/incarceration-trends/master/incarceration_trends.csv")
+
+
+# This is a aggregated data set that includes information for calculation
+incarceration_inequality_aggregated <- incarceration_inequality %>%
+  group_by(year) %>%
+  select(
+    total_pop,
+    female_pop_15to64,
+    male_pop_15to64,
+    female_adult_jail_pop,
+    male_adult_jail_pop,
+  )
+
+#Used for calculating only with complete data entries
+incarceration_inequaity_no_NA <- incarceration_inequality_aggregated[complete.cases(incarceration_inequality_aggregated), ]
+
+#Used for calculating population averages across year-by-year
+incarceration_inequality_summary <- incarceration_inequaity_no_NA %>%
+  group_by(year,) %>%
+  summarise(across(c(total_pop, female_pop_15to64, male_pop_15to64, female_adult_jail_pop, male_adult_jail_pop), sum))
+
+#Calculate gender ratio year-by-year
+incarceration_inequality_summary$male_to_female_ratio <- (incarceration_inequality_summary$male_adult_jail_pop / incarceration_inequality_summary$female_adult_jail_pop)
+
+#A specific table of specific findings
+summary_info <- list()
+summary_info$num_observations <- nrow(incarceration_table)
+
+#Total male to female incarceration ratio
+summary_info$male_to_female_ratio <- mean(incarceration_inequality_summary$male_adult_jail_pop / incarceration_inequality_summary$female_adult_jail_pop)
+
+#1970 male to female incarceration ratio
+summary_info$male_to_female_ratio_1970 <- incarceration_inequality_summary$male_to_female_ratio
+  filter(male_to_female_ratio == 1970)
+  select(male_to_female_ratio) %>%
+  pull()
+
 #----------------------------------------------------------------------------#
 
 ## Section 3  ---- 
