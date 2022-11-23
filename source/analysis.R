@@ -79,12 +79,11 @@ summary_info$male_to_female_ratio_48_year_change <- summary_info$male_to_female_
 #Total jail population per year function
 get_year_jail_pop <- function() {
   incarceration_inequality_summary %>%
-    group_by(year) %>%
-    select(
-      year,
-      total_jail_pop,
-    )
-return()
+  group_by(year) %>%
+  select(
+    year,
+    total_jail_pop, 
+  )
 }
 
 get_year_jail_pop()
