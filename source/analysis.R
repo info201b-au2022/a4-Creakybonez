@@ -34,6 +34,7 @@ incarceration_inequality_aggregated <- incarceration_inequality %>%
     male_pop_15to64,
     female_adult_jail_pop,
     male_adult_jail_pop,
+    total_jail_pop
   )
 
 #Used for calculating only with complete data entries
@@ -42,7 +43,7 @@ incarceration_inequaity_no_NA <- incarceration_inequality_aggregated[complete.ca
 #Used for calculating population averages across year-by-year
 incarceration_inequality_summary <- incarceration_inequaity_no_NA %>%
   group_by(year,) %>%
-  summarise(across(c(total_pop, female_pop_15to64, male_pop_15to64, female_adult_jail_pop, male_adult_jail_pop), sum))
+  summarise(across(c(total_pop, female_pop_15to64, male_pop_15to64, female_adult_jail_pop, male_adult_jail_pop, total_jail_pop), sum))
 
 #Calculate gender ratio year-by-year
 incarceration_inequality_summary$male_to_female_ratio <- (incarceration_inequality_summary$male_adult_jail_pop / incarceration_inequality_summary$female_adult_jail_pop)
@@ -55,17 +56,51 @@ summary_info$num_observations <- nrow(incarceration_table)
 summary_info$male_to_female_ratio <- mean(incarceration_inequality_summary$male_adult_jail_pop / incarceration_inequality_summary$female_adult_jail_pop)
 
 #1970 male to female incarceration ratio
-summary_info$male_to_female_ratio_1970 <- incarceration_inequality_summary$male_to_female_ratio
-  filter(male_to_female_ratio == 1970)
+summary_info$male_to_female_ratio_1970 <- incarceration_inequality_summary %>%
+  filter(year == min(year,na.rm = T)) %>%
   select(male_to_female_ratio) %>%
   pull()
+
+#2018 male to female incarceration ratio
+summary_info$male_to_female_ratio_2018 <- incarceration_inequality_summary %>%
+  filter(year == max(year,na.rm = T)) %>%
+  select(male_to_female_ratio) %>%
+  pull()
+
+#Change in male to female incarceration ratio over 48 years
+summary_info$male_to_female_ratio_48_year_change <- summary_info$male_to_female_ratio_2018 - summary_info$male_to_female_ratio_1970
 
 #----------------------------------------------------------------------------#
 
 ## Section 3  ---- 
 #----------------------------------------------------------------------------#
 # Growth of the U.S. Prison Population
-# Your functions might go here ... <todo:  update comment>
+
+#Total jail population per year function
+get_year_jail_pop <- function() {
+  incarceration_inequality_summary %>%
+    group_by(year) %>%
+    select(
+      year,
+      total_jail_pop,
+    )
+return()
+}
+
+get_year_jail_pop()
+
+
+plot_jail_pop_for_us <- ggplot(data = college_table ) +
+  geom_point(
+    mapping = aes(x = State.abbreviation , y =average_expense_out_state),
+    color = "blue",
+    alpha = .3
+  ) + coord_flip()
+
+print(chart_1 + labs(
+  title = "Chart #1 Average expense (out of state) of each state",
+  y = "Price", x = "States"
+))
 #----------------------------------------------------------------------------#
 # This function ... <todo:  update comment>
 get_year_jail_pop <- function() {
